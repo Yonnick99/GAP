@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %} SEGURIDAD {% endblock %}
+
+{% block content %}
+
+
+<div class="card bg-dark">
+  <div class="container p-4 bg-dark">
+        {% if mensaje %}
+        <div class="alert alert-success alert-dismissible fade show mt-3 clo-3" role="alert">
+          {{ mensaje }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <div class="container bg-light rounded mb-2">
+          <form class="from needs-validation" method="post" action="/actualizar/" novalidate>
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-12 mt-2">
+                <div class="row text-center m-2">
+                  <div class="col-1 align-items-left text-center m-2">
+                    <i>
+                      {% if tipos == 1 %}
+                        <a href="/dashboard" class="bi bi-house btn btn-outline-success border-0 fs-1" title="VOLVER" aria-label="VOLVER" >
+                      {% elif tipos == 3 %}
+                        <a href="/dashboard" class="bi bi-house btn btn-outline-success border-0 fs-1" title="VOLVER" aria-label="VOLVER" >
+                      {% elif tipos == 2 %}
+                        <a href="/tutor" class="bi bi-house btn btn-outline-success border-0 fs-1" title="VOLVER" aria-label="VOLVER" >
+                      {% elif tipos == 4 %}
+                        <a href="/participante" class="bi bi-house btn btn-outline-success border-0 fs-1" title="VOLVER" aria-label="VOLVER" >
+                      {% else %}  
+                        <a href="/signout/" class="bi bi-house btn btn-outline-success border-0 fs-1" title="VOLVER" aria-label="VOLVER" >
+                      {% endif %}
+                      </a>
+                    </i>
+                  </div>
+                  <div class="col-10 align-items-center text-center mt-4">
+                    <p class="fs-2">Datos Personales</p>
+                  </div>
+                </div>
+                <!--Datos Principales-->
+                <div class="row">
+                  <div class="col-1 mb-3 mt-2"></div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 mb-3 mt-2">
+                    <label for="nombre" class="form-label">Nombre(s)</label>                    
+                    <input type="text" class="form-control border border-secondary" name="nombre" value="{{ datos.nombre }}"
+                      required>
+                    <div class="invalid-feedback">
+                      Debe indicar su nombre(s)
+                    </div>
+                  </div>
+                  <div class=" col-lg-4 col-md-4 col-sm-12 mb-3 mt-2">
+                    <label for="apellido" class="form-label">Apellido(s)</label>
+                    <input type="text" class="form-control border border-secondary" name="apellido" value="{{ datos.apellido }}"
+                      required>
+                    <div class="invalid-feedback">
+                      Debe indicar su apellido(s)
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-12 mb-3 mt-2">
+                    <label for="nucleo" name="nucleo" class="form-label">Nucleo</label>
+                    <select name="nucleo" class="form-control border border-secondary" required> Seleccione
+                      <option value="{{ datos.nucleo}}">{{datos.nucleo}}</option>
+                      <option value="Palo Verde">Palo Verde</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Colocar un correo valido
+                    </div>
+                  </div>
+                  <div class="col-1 mb-3 mt-2"></div>
+                </div>
+                <div class="row">
+                  <div class="col-1 col-sm-0 mb-3 mt-2"></div>
+                  <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+                    <label for="cedula"  class="form-label">Documento de Identidad</label>
+                    <input type="number" name="cedula" class="form-control border border-secondary border border-secondary"
+                     value="{{ datos.cedule }}" disabled required>
+                    <div class="invalid-feedback">
+                      Debe agregar un documento de identidad, solo números.
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+                    <label for="fNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control border border-secondary" name="fNacimiento" value="{{ datos.fecha_nacimiento}}"
+                      required>
+                    <div class="invalid-feedback">
+                      Debe indicar su Fecha de Nacimiento.
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 mb-3 mt-2">
+                    <label for="correo" class="form-label">Email / Correo</label>
+                    <input type="email" class="form-control border border-secondary" name="correo" value="{{ datos.correo }}"
+                      placeholder="Ejemplo@uners.com" required>
+                    <div class="invalid-feedback">
+                      Colocar un correo valido
+                    </div>
+                  </div>
+                  <div class="col-1 col-sm-0 mb-3 mt-2"></div>
+                </div>
+                <!--telefonos -->
+                <div class="row">
+                  <div class="col-1 mb-3 mt-2"></div>
+                  <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+                    <label for="tprincipal"  class="form-label">Telefono</label>
+                    <input type="number" class="form-control border border-secondary" name="tprincipal" value="{{ datos.tlf_princimal }}"
+                    required>
+                    <div class="invalid-feedback">
+                      Debe agregar un numero telefonico.
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+                    <label for="tsecundario" class="form-label">Telefono Alternativo</label>
+                    <input type="number" class="form-control border border-secondary" name="tsecundario" value="{{ datos.tlf_secundario }}">
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 mb-3 mt-2">
+                    <label for="tusuario" class="form-label">Tipo de Usuario</label>
+                    <select name="tusuario" class="form-control border border-secondary" disabled required>
+                      <option selected> {{datos.tipo_usuario}}</option>
+                      <option>...</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Colocar un correo valido
+                    </div>
+                  </div>
+                  <div class="col-1 mb-3 mt-2"></div>
+                </div>
+                <!--Direccion -->
+                <div class="row">
+                    <div class="col-1 mb-3 mt-2"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+
+                        <label for="estado" class="form-label">Estado</label>
+                        <select id="estado" name="estado" onchange="actualizarCapital()" class="form-control border border-secondary" required>
+                          <option selected>{{datos.estado}}</option>
+                          <option value="Amazonas">Amazonas</option>
+                          <option value="Anzoátegui">Anzoátegui</option>
+                          <option value="Apure">Apure</option>
+                          <option value="Aragua">Aragua</option>
+                          <option value="Barinas">Barinas</option>
+                          <option value="Bolívar">Bolívar</option>
+                          <option value="Carabobo">Carabobo</option>
+                          <option value="Cojedes">Cojedes</option>
+                          <option value="Delta Amacuro">Delta Amacuro</option>
+                          <option value="Falcón">Falcón</option>
+                          <option value="Guárico">Guárico</option>
+                          <option value="Lara">Lara</option>
+                          <option value="Mérida">Mérida</option>
+                          <option value="Miranda">Miranda</option>
+                          <option value="Monagas">Monagas</option>
+                          <option value="Nueva Esparta">Nueva Esparta</option>
+                          <option value="Portuguesa">Portuguesa</option>
+                          <option value="Sucre">Sucre</option>
+                          <option value="Táchira">Táchira</option>
+                          <option value="Trujillo">Trujillo</option>
+                          <option value="La Guaira">La Guaira (Vargas)</option>
+                          <option value="Yaracuy">Yaracuy</option>
+                          <option value="Zulia">Zulia</option>
+                          <option value="Distrito Capital">Distrito Capital</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Colocar un correo valido
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-12 mb-3 mt-2">
+                        <label for="capital" class="form-label">Ciudad</label>
+                        <input type="text" id="capital" name="capital" class="form-control border border-secondary" value="{{datos.ciudad}}" readonly>
+                        <div class="invalid-feedback">
+                            Colocar un correo valido
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 mb-3 mt-2">
+                        <label for="cpostal" class="form-label">Codigo Postal</label>
+                        <input type="number" class="form-control border border-secondary" name="cpostal" value="{{ datos.cpostal }}">
+                        <div class="invalid-feedback">
+                            Debe indicar su codigo postal
+                        </div>
+                    </div>
+                    <div class="col-1 mb-3 mt-2"></div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col text-center mb-3">
+                    <button type="submit" class="btn btn-success"  >Actualizar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+  </div>
+
+</div>
+
+ <script>
+        // 1. Objeto JavaScript que mapea Estado a Capital (similar a un diccionario de Python)
+        const capitales = {
+            "Amazonas": "Puerto Ayacucho",
+            "Anzoátegui": "Barcelona",
+            "Apure": "San Fernando de Apure",
+            "Aragua": "Maracay",
+            "Barinas": "Barinas",
+            "Bolívar": "Ciudad Bolívar",
+            "Carabobo": "Valencia",
+            "Cojedes": "San Carlos",
+            "Delta Amacuro": "Tucupita",
+            "Falcón": "Coro",
+            "Guárico": "San Juan de los Morros",
+            "Lara": "Barquisimeto",
+            "Mérida": "Mérida",
+            "Miranda": "Los Teques",
+            "Monagas": "Maturín",
+            "Nueva Esparta": "La Asunción",
+            "Portuguesa": "Guanare",
+            "Sucre": "Cumaná",
+            "Táchira": "San Cristóbal",
+            "Trujillo": "Trujillo",
+            "La Guaira": "La Guaira",
+            "Yaracuy": "San Felipe",
+            "Zulia": "Maracaibo",
+            "Distrito Capital": "Caracas"
+            // Asegúrate de que las claves coincidan con los 'value' de las opciones SELECT
+        };
+
+        /**
+         * Función que se ejecuta cada vez que cambia la selección del Estado.
+         */
+        function actualizarCapital() {
+            // Obtener el elemento SELECT de los estados
+            const selectEstado = document.getElementById('estado');
+            
+            // Obtener el elemento INPUT de la capital
+            const inputCapital = document.getElementById('capital');
+            
+            // Obtener el valor (el nombre del estado) seleccionado
+            const estadoSeleccionado = selectEstado.value;
+            
+            // Si se seleccionó un estado válido (no la opción vacía inicial)
+            if (estadoSeleccionado) {
+                // Buscar la capital en el objeto 'capitales' y asignarla al campo de texto
+                inputCapital.value = capitales[estadoSeleccionado];
+            } else {
+                // Si se selecciona la opción predeterminada, limpiar el campo de la capital
+                inputCapital.value = "";
+            }
+        }
+    </script>
+
+{% endblock %}

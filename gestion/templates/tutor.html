@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block title %} SEGURIDAD {% endblock %}
+
+{% block content %}
+
+<body class="container">
+ 
+  <div class="card bg-dark">
+    
+    <div class="row">
+      <div class="col card m-5">
+        <div class="row align-items-center justify-content-center ">
+          <div class="col-1 m-2 ">
+            <i>
+              <a href="/dashboard" class="bi bi-house btn btn-success border-0 fs-1" title="HOME" aria-label="HOME" >                
+              </a>
+            </i>
+          </div>
+          <div class="col-10 text-center">
+            <h3>Seleccione los campos para agregar un nuevo tutor al sistema</h3>
+          </div>
+        </div>
+        <form class="m-2 needs-validation" method="POST" action="/tutor/" novalidate>
+          {% csrf_token %}        
+          <div class="row center align-items-center justify-content-center mt-3 ">
+            <div class="col-md-3 col-sm-12">
+                <label for="facilitador"  class="form-label">Nombre y Cedula</label>
+                <select id="facilitador" name="facilitador" class="form-control" required>
+                  <option value="" selected disabled>Seleccione un Facilitador</option>
+                  {% for profesor in profesores %}
+                    <option value="{{ profesor.id_persona }}">{{ profesor.nombre }}</option>
+                  {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Seleccione una Mención
+                </div>
+            </div>        
+                    <div class="col-md-3 col-sm-6">
+                        <label for="carrera" class="form-label">Carrera</label>
+                        <select id="carrera" name="carrera" class="form-control" required>
+                          <option value="" selected disabled>Seleccione una Carrera</option>
+                          {% for carrera in carreras %}
+                            <option value="{{ carrera.id_carrera }}">{{ carrera }}</option>
+                          {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                            Seleccione una Carrera
+                        </div> 
+                    </div>
+                    <div class="col-md-3 col-sm-6 ">
+                        <label for="mencion" class="form-label">Mencion</label>
+                        <select id="mencion" name="mencion" id="mencion" class="form-control" required>
+                          <option value="" selected disabled>Seleccione una Mención</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Seleccione una Mención
+                        </div>
+                    </div>
+            
+
+
+          
+          </div>            
+          <div class="row text-center align-items-center justify-content-center mt-3">
+              <div class="col-md-6 col-sm-12 mb-3 mt-2 ">
+                <button type="submit" class="btn btn-success mt-2">
+                  <i class="bi bi-floppy"></i>
+                  Guardar
+                </button>
+                <button type="reset" class="btn btn-outline-danger mt-2">
+                  <i class="bi bi-eraser"></i>
+                  Limpiar
+                </button>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <div class="row align-items-center justify-content-center" id="tabla_tutores">
+      <div class="col-10 card m-4 mt-2">
+        <div class="col-12">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Cedula</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Mencion</th>
+                <th scope="col">Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for existente in existentes %}
+                <tr>
+                    <th scope="row">{{ existente.id_persona.cedule }}</th>
+                    <td>{{ existente.id_persona.nombre }}</td>
+                    <td>{{ existente.id_persona.apellido }}</td>
+                    <td>{{ existente.id_carrera.nombre }}</td>
+                    <td> <button type="submit" class="btn btn-danger" id="delete_tutor" data-id="{{ existente.id_tutor }}"> <i class="bi bi-eraser"></i></button>  </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+      'use strict'
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
+
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+
+      // Referencias a los elementos del DOM
+    const carreraSelect = document.getElementById('carrera');
+    const mencionSelect = document.getElementById('mencion');
+    const delete_tutor = document.getElementById('tabla_tutores')
+    
+    carreraSelect.addEventListener('change', function() {
+      const carreraId = this.value;
+      
+      // Limpiar y deshabilitar SELECTs dependientes
+      mencionSelect.innerHTML = '<option value="">Cargando...</option>';
+      mencionSelect.disabled = true;
+
+      if (carreraId) {
+              // URL a la vista de Django
+              const url = "{% url 'ajax_cargar_menciones' %}?carrera_id=" + carreraId;
+              
+              fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                      mencionSelect.innerHTML = '<option value="">-- Seleccione una Mención --</option>';
+                      if (data.length > 0) {
+                          data.forEach(mencion => {
+                              mencionSelect.innerHTML += `<option value="${mencion.id}">${mencion.nombre}</option>`;
+                          });
+                          mencionSelect.disabled = false;
+                      } else {
+                          mencionSelect.innerHTML = '<option value="">No hay Menciones para esta Carrera</option>';
+                      }
+                  })
+                  .catch(error => console.error('Error al cargar menciones:', error));
+          } else {
+          mencionSelect.innerHTML = '<option value="">-- Primero seleccione Carrera --</option>';
+      }
+    });
+      
+    delete_tutor.addEventListener('click', function(event) {
+    
+
+      if (event.target.classList.contains('btn-danger')) {
+        
+        const deleteButton = event.target;        
+        const tutotId = deleteButton.getAttribute('data-id');
+
+        if (tutotId) {
+
+            const url = "{% url 'ajax_eliminar_tutor' %}?tutot_Id=" + tutotId;
+            const url_tutor = "{% url 'tutor' %}";
+
+            if (!confirm('¿Está seguro de que desea eliminar este registro?')) {
+                event.preventDefault(); 
+                return; // Importante: detiene la ejecución si el usuario cancela
+            } 
+            
+            fetch(url) 
+                .then(response => response.json())
+                .then(data => { 
+                    mostrarMensaje('Resultado', data.message, 'success');                  
+                    window.location.href = url_tutor
+                })
+                .catch(error => console.error('Error al eliminar tutor:', error));
+        }
+      }
+
+      function mostrarMensaje(titulo, mensaje, tipo) {
+
+        let color = tipo === 'success' ? 'green' : 'red';
+        console.log(`${titulo} (${tipo}): ${mensaje}`);
+        
+        // Ejemplo simple:
+        alert(`${titulo}: ${mensaje}`); 
+      }
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+  </script>
+  
+</body>
+
+{% endblock %}

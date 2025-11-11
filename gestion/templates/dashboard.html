@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %} SEGURIDAD {% endblock %}
+
+{% block content %}
+
+
+    <div class="container text-center d-flex justify-content-center">
+        <div>
+            <p></p>
+        </div>
+        <div class="p-4 m-4 card bg-dark w-75">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div class="card bg-secondary-subtle">
+                        <label for="">CONSULTA </label>                        
+                        <i>
+                            <a  href="/consulta/" type="submit" class="bi bi-search btn btn-outline-primary border-0 fs-1">
+                            </a>
+                        </i>                        
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div class="card bg-secondary-subtle">
+                        <label for="">REPORTES</label>
+                        <i>
+                            <a href="/reporte/" type="submit" class="bi bi-printer-fill btn btn-outline-primary border-0 fs-1">
+                            </a>
+                        </i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div class="card bg-secondary-subtle">
+                        <label for="">PROCESOS</label>
+                        <i>
+                            <a href="/gestion/" type="submit" class="bi bi-tools btn btn-outline-secondary border-0 fs-1">
+                            </a>
+                        </i>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div class="card bg-secondary-subtle">
+                        <label for="">REGISTRO</label>
+                        <i>
+                            <a href="/registro" class="bi bi-person-fill-add btn btn-outline-success border-0 fs-1">
+                            </a>
+                        </i>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">                    
+                    <div class="card bg-secondary-subtle">
+                        <label for="">TUTOR</label>
+                        <i>
+                            <a href="/tutor"  class="bi bi-people btn btn-outline-success border-0 fs-1">
+                            </a>
+                        </i>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-2">                    
+                    <div class="card bg-secondary-subtle">
+                        <label for="">SEGURIDAD</label>
+                            <i>
+                                <a href="/seguridad_admin/" class="btn btn-outline-danger border-0 bi bi-shield-lock fs-1">  
+                                </a>
+                            </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

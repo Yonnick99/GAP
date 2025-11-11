@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %} SEGURIDAD {% endblock %}
+
+{% block content %}
+
+
+<div class="card bg-dark">
+    
+{% if mensaje %}
+    <div class="col-6 alert alert-success alert-dismissible fade show" role="alert">
+        {{ mensaje }}
+        
+        <button type="button" 
+                class="btn-close" 
+                data-bs-dismiss="alert" 
+                aria-label="Cerrar">
+        </button>
+    </div>
+{% endif %}
+  <div class="row">
+    <div class="col card m-5 mb-1">
+      <form class="m-4 needs-validation" method="POST" action="/seguridad_admin/" novalidate>
+        {% csrf_token %}
+        <div class="row text-center justify-content-center mb-4">
+          <div class="col-1">
+            <i>
+              {% if roles == 1 %} <!-- ADMINISTRADOR -->
+              <a href="/dashboard" class="bi bi-house btn btn-outline-success border-0 fs-1" title="HOME" aria-label="HOME" >
+              {% elif roles == 2 %} <!-- TUTOR -->
+              {% else %}  <!-- PARTICIPANTE -->
+              <a href="/signout/" class="bi bi-house btn btn-outline-success border-0 fs-1" title="HOME" aria-label="HOME" >
+              {% endif %}
+              </a>
+            </i>
+          </div>
+          <div class="col-lg-10 col-md-10">
+            <p class="fs-1 ">Use el metodo de busqueda de su preferencia.</p>
+            <p class="fs-4">Se poseen diferentes metodos: Nombre, Cedula o buscar por carrera o mencion</p>
+          </div>
+          <div class="col-1"></div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center">  
+          <div class="col-md-3 col-sm-6">
+            <label for="search_cedula" class="form-label">Indique el Doc. Identidad</label>
+            <input type="number" class="form-control border border-dark" id="search_cedula" name="search_cedula" placeholder="6263458">
+            <div class="invalid-feedback">
+              El documento de identidad debe contener solo numeros
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <label for="search_nombre" class="form-label">Indique el nombre</label>
+            <input type="text" class="form-control border border-dark" id="search_nombre" name="search_nombre" placeholder="Ana" >
+            <div class="invalid-feedback">
+              El nombre a ingresar debe contener minimo 3 caracteres
+            </div>
+          </div>
+        </div>  
+        <div class="row align-items-center justify-content-center mt-4">
+          <div class="col-md-4 col-sm-12 ">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-search"></i>
+              BUSCAR
+            </button>
+            <button type="reset" class="btn btn-outline-danger">
+              <i class="bi bi-eraser"></i>
+              Limpiar
+            </button>
+          </div>
+        </div>      
+      </form>
+    </div>
+  </div>
+
+  <div class="row align-items-center justify-content-center mt-4" id="tabla_tutores">
+      <div class="col-10 card m-4 mt-2">
+        <div class="col-12">
+          <table class="table table-striped" id="table_datos">
+            <thead>
+              <tr>
+                <th scope="col">Cedula</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Editar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for resultado in resultados %}
+                <tr>
+                    <th scope="row">{{ resultado.cedule }}</th>
+                    <td>{{ resultado.nombre }}</td>
+                    <td>{{ resultado.apellido }}</td>
+                    <td>{{ resultado.correo }}</td>
+                    <td> 
+                      <button type="button" class="btn btn-success" id="modificar_datos" data-id="{{ resultado.id_persona }}"><i class="bi bi-pencil-square"></i></button> 
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleccionamos todos los botones que tienen la clase 'btn-success'
+        const botonesModificar = document.querySelectorAll('.btn-success'); 
+
+        botonesModificar.forEach(button => {
+            button.addEventListener('click', function() {
+                // 1. Obtener el ID de la persona del atributo data-id
+                const personaId = this.getAttribute('data-id');
+
+                if (personaId) {
+                    // 2. Construir la URL de destino usando el nombre de la ruta de Django.
+                    //    IMPORTANTE: Necesitas pasar la URL base desde Django al JS.
+                    
+                    // Opción A: Usar una variable JS definida con la URL de Django (si es posible)
+                    // let url_base = "{% url 'modificar_usuario' 0 %}"; // Esto puede no funcionar bien en JS
+                    
+                    // Opción B: Construir la URL manualmente, que es más simple si la URL es fija:
+                    const urlDestino = `/modificar/${personaId}/`; 
+                    
+                    // 3. Redirigir el navegador a la nueva URL
+                    window.location.href = urlDestino;
+                }
+            });
+        });
+    });
+
+
+  
+  // 1. Objeto JavaScript que mapea Estado a Capital (similar a un diccionario de Python)
+  const capitales = {
+      "Amazonas": "Puerto Ayacucho",
+      "Anzoátegui": "Barcelona",
+      "Apure": "San Fernando de Apure",
+      "Aragua": "Maracay",
+      "Barinas": "Barinas",
+      "Bolívar": "Ciudad Bolívar",
+      "Carabobo": "Valencia",
+      "Cojedes": "San Carlos",
+      "Delta Amacuro": "Tucupita",
+      "Falcón": "Coro",
+      "Guárico": "San Juan de los Morros",
+      "Lara": "Barquisimeto",
+      "Mérida": "Mérida",
+      "Miranda": "Los Teques",
+      "Monagas": "Maturín",
+      "Nueva Esparta": "La Asunción",
+      "Portuguesa": "Guanare",
+      "Sucre": "Cumaná",
+      "Táchira": "San Cristóbal",
+      "Trujillo": "Trujillo",
+      "La Guaira": "La Guaira",
+      "Yaracuy": "San Felipe",
+      "Zulia": "Maracaibo",
+      "Distrito Capital": "Caracas"
+      // Asegúrate de que las claves coincidan con los 'value' de las opciones SELECT
+  };
+
+  // Función que se ejecuta cada vez que cambia la selección del Estado.*/
+  function actualizarCapital() {
+      // Obtener el elemento SELECT de los estados
+      const selectEstado = document.getElementById('estado');
+      
+      // Obtener el elemento INPUT de la capital
+      const inputCapital = document.getElementById('capital');
+      
+      // Obtener el valor (el nombre del estado) seleccionado
+      const estadoSeleccionado = selectEstado.value;
+      
+      // Si se seleccionó un estado válido (no la opción vacía inicial)
+      if (estadoSeleccionado) {
+          // Buscar la capital en el objeto 'capitales' y asignarla al campo de texto
+          inputCapital.value = capitales[estadoSeleccionado];
+      } else {
+          // Si se selecciona la opción predeterminada, limpiar el campo de la capital
+          inputCapital.value = "";
+      }
+  }
+        
+    (() => {
+      'use strict'
+      const forms = document.querySelectorAll('.needs-validation')
+
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+
+</script>
+
+{% endblock %} 

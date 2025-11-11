@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <title> {% block title %} {% endblock %} </title>
+</head>
+
+
+<header>
+  <nav class="navbar navbar-light bg-primary-subtle mb-5 rounded-3 align-items-center">
+    <div class="container">
+        <div div>
+        <p class="fs-5"> <small> {% now "j \d\e F \d\e Y" %} </small></p> 
+        <p class="fs-5"> <small> {% if user.is_authenticated %} {{ user.first_name }}   {{ user.last_name }}  {% endif %} </small> </p>
+
+        </div>
+        <div>
+            <p class="fs-3"> Sistema de Respaldo Administrativo de Pasantia </p>
+        </div>
+      {% if user.is_authenticated %}
+      <div class="dropdown">
+
+        <button class="btn btn-bd-light dropdown-toggle" id="musuario" data-bs-toggle="dropdown" aria-expanded="true" data-bs-display="static">
+          <span class="bi bi-person-fill" style="font-size: 1.5rem;"></span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="musuario">
+          <li><a class="dropdown-item" href="/seguridad">Mi Cuenta</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/signout">Salir</a></li>
+        </ul>
+      </div>
+      {% endif %}
+
+    </div>
+  </nav>
+
+
+</header>
+
+<body class="container">
+    {% block content %} 
+        <!-- Contenido específico de cada página -->
+    {% endblock %}
+
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+      'use strict'
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
+
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  </script>
+
+</body>
+<footer> 
+</footer>
+</html>

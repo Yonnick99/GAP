@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %} SEGURIDAD {% endblock %}
+
+{% block content %}
+
+
+<div class="card bg-dark">
+    
+{% if mensaje %}
+  <div class="col-6 alert alert-success alert-dismissible fade show" role="alert">
+    {{ mensaje }}        
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"> </button>
+  </div>
+{% endif %}
+  <div class="row">
+    <div class="col card m-5 mb-1">
+      <form class="m-4 needs-validation" method="POST" action="/gestion/" novalidate>
+        {% csrf_token %}
+        <div class="row text-center justify-content-center mb-4">
+          <div class="col-1">
+            <i>
+              {% if roles == 1 %} <!-- ADMINISTRADOR -->
+              <a href="/dashboard" class="bi bi-house btn btn-outline-success border-0 fs-1" title="HOME" aria-label="HOME" >
+              {% else %}  <!-- PARTICIPANTE -->
+              <a href="/signout/" class="bi bi-house btn btn-outline-success border-0 fs-1" title="HOME" aria-label="HOME" >
+              {% endif %}
+              </a>
+            </i>
+          </div>
+          <div class="col-lg-10 col-md-10">
+            <p class="fs-1 ">Use el metodo de busqueda de su preferencia.</p>
+            <p class="fs-4">Es recomendado seleccionar el estado del Expediente a consultar</p>
+          </div>
+          <div class="col-1"></div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center mt-2">  
+          <div class="col-md-3 col-sm-6">
+            <label for="search_cedula" class="form-label">Número de Expediente</label>
+            <input type="number" class="form-control border border-dark" id="search_expediente" name="search_expediente" placeholder="142543">
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <label for="search_cedula" class="form-label">Indique el Doc. Identidad</label>
+            <input type="number" class="form-control border border-dark" id="search_cedula" name="search_cedula" placeholder="6263458">
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <label for="search_nombre" class="form-label">Indique el nombre</label>
+            <input type="text" class="form-control border border-dark" id="search_nombre" name="search_nombre" placeholder="Ana" >
+          </div>
+        </div> 
+        <div class="row d-flex justify-content-center align-items-center mt-4">  
+          <div class="col-md-3 col-sm-6">
+              <label for="carrera" class="form-label">Carrera</label>
+              <select id="carrera" name="carrera" class="form-control border border-dark" >
+                <option value="" selected disabled>Seleccione una Carrera</option>
+                {% for carrera in carreras %}
+                  <option value="{{ carrera.id_carrera }}">{{ carrera.nombre }}</option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">
+                  Seleccione una Carrera
+              </div> 
+          </div>
+          <div class="col-md-3 col-sm-6 ">
+              <label for="mencion" class="form-label">Mencion</label>
+              <select id="mencion" name="mencion" id="mencion" class="form-control border border-dark">
+                <option value="" selected disabled>Seleccione una Mención</option>
+              </select>
+              <div class="invalid-feedback">
+                  Seleccione una Mención
+              </div>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <label for="search_estado" class="form-label">Estado del Expediente</label>
+              <select id="search_estado" name="search_estado" class="form-control border border-dark">
+                <option value="" selected disabled>Seleccione una Estado</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="Aprobado">Aprobado</option>  
+                <option value="Reprobado">Reprobado</option>    
+              </select>
+          </div>
+        </div>   
+        <div class="row align-items-center justify-content-center mt-4">
+          <div class="col-md-4 col-sm-12 ">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-search"></i>
+              BUSCAR
+            </button>
+            <button type="reset" class="btn btn-outline-danger">
+              <i class="bi bi-eraser"></i>
+              Limpiar
+            </button>
+          </div>
+        </div>      
+      </form>
+    </div>
+  </div>
+
+  <div class="row align-items-center justify-content-center mt-4" id="tabla_tutores">
+      <div class="col-10 card m-4 mt-2">
+        <div class="col-12">
+          <table class="table table-striped" id="table_datos">
+            <thead>
+              <tr>
+                <th scope="col">N° Expediente</th>
+                <th scope="col">Cedula</th>
+                <th scope="col">Nombre </th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Tutor</th>
+                <th scope="col">Procesar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for resultado in resultados %}
+                <tr>
+                    <th scope="row">{{ resultado.id_expediente }}</th>
+                    <td>{{ resultado.id_persona.cedule }}</td>
+                    <td>{{ resultado.id_persona.nombre }}</td>
+                    <td>{{ resultado.id_persona.apellido }}</td>
+                    <td>{{ resultado.estado }}</td>
+                    <td>{{ resultado.id_tutor.id_persona.nombre }} {{ resultado.id_tutor.id_persona.apellido }}</td>
+                    <td> 
+                      <button type="button" class="btn btn-success" id="modificar_datos" data-id="{{ resultado.id_expediente }}"><i class="bi bi-pencil-square"></i></button> 
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+      'use strict'
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
+
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  
+
+            // Referencias a los elementos del DOM
+    const carreraSelect = document.getElementById('carrera');
+    const mencionSelect = document.getElementById('mencion');
+    const delete_tutor = document.getElementById('tabla_tutores')
+    
+    carreraSelect.addEventListener('change', function() {
+      const carreraId = this.value;
+      
+      // Limpiar y deshabilitar SELECTs dependientes
+      mencionSelect.innerHTML = '<option value="">Cargando...</option>';
+      mencionSelect.disabled = true;
+
+      if (carreraId) {
+              // URL a la vista de Django
+              const url = "{% url 'ajax_cargar_menciones' %}?carrera_id=" + carreraId;
+              
+              fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                      mencionSelect.innerHTML = '<option value="">-- Seleccione una Mención --</option>';
+                      if (data.length > 0) {
+                          data.forEach(mencion => {
+                              mencionSelect.innerHTML += `<option value="${mencion.id}">${mencion.nombre}</option>`;
+                          });
+                          mencionSelect.disabled = false;
+                      } else {
+                          mencionSelect.innerHTML = '<option value="">No hay Menciones para esta Carrera</option>';
+                      }
+                  })
+                  .catch(error => console.error('Error al cargar menciones:', error));
+          } else {
+          mencionSelect.innerHTML = '<option value="">-- Primero seleccione Carrera --</option>';
+      }
+    });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+        // Seleccionamos todos los botones que tienen la clase 'btn-success'
+        const botonesModificar = document.querySelectorAll('.btn-success'); 
+
+        botonesModificar.forEach(button => {
+            button.addEventListener('click', function() {
+                // 1. Obtener el ID de la persona del atributo data-id
+                const expedienteId = this.getAttribute('data-id');
+
+                if (expedienteId) {
+                    // 2. Construir la URL de destino usando el nombre de la ruta de Django.
+                    //    IMPORTANTE: Necesitas pasar la URL base desde Django al JS.
+                    
+                    // Opción A: Usar una variable JS definida con la URL de Django (si es posible)
+                    // let url_base = "{% url 'modificar_usuario' 0 %}"; // Esto puede no funcionar bien en JS
+                    
+                    // Opción B: Construir la URL manualmente, que es más simple si la URL es fija:
+                    const urlDestino = `/gestion_user/${expedienteId}/`; 
+                    
+                    // 3. Redirigir el navegador a la nueva URL
+                    window.location.href = urlDestino;
+                }
+            });
+        });
+    });
+
+
+  </script>
+{% endblock %} 

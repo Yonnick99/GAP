@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+
+{% block title %} INICIO GAP {% endblock %}
+
+{% block content %}
+
+<body class="container-fluid" style="min-width: 840px;";>
+
+  <div class="card bg-dark">    
+    <div class="row d-flex flex-column align-items-center">            
+    <div class="row align-items-center justify-content-center">
+      <div class="col-11 card bg-light m-4 p-5">
+        <div class="container">
+        <div class="col-11 mt-3">  
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link bg-secondary active link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">Informacion del Expediente</button>
+              </li>
+              <li class="nav-item hover" role="presentation">
+                <button class="bg-secondary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover nav-link " id="seguridad-tab" data-bs-toggle="tab" data-bs-target="#seguridad" type="button" role="tab" aria-controls="seguridad" aria-selected="false">Recaudos a consignar</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                <div class="bg-light rounded-bottom mb-2">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col card">
+                    <div class="container p-5">
+                      <div class="row mt-4">
+                        <h4>Datos basicos del Participante</h4>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-md-3  col-sm-6">
+                          <label for="cedula" class="form-label">Doc. Identidad</label>
+                          <input type="text" name="cedula" class="form-control" value="{{ datos.cedule }}" >
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <label for="carrera" class="form-label">Carrera</label>
+                            <input type="text" name="carrera" class="form-control" value="{{ datos_expedientes.id_mencion.id_carrera }}" >
+                        </div>
+                        <div class="col-md-3 col-sm-6 ">
+                            <label for="mencion" class="form-label">Mencion</label>
+                            <input type="text" name="mencion" class="form-control" value="{{ datos_expedientes.id_mencion }}" >
+                        </div>
+                        <div class="col-md-3">
+                          <label for="nombreT" class="form-label">Tutor</label>
+                            <input type="text" name="nombreT" class="form-control" value="{{ datos_expedientes.id_tutor }}" >
+                        </div>
+                        <div class="col-md-3"></div>
+                      </div>   
+                      <div class="row mt-4">
+                        <h4>Recaudos de pasantias</h4>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-md-3 col-sm-6">
+                          <label for="pinicio" class="form-label">Periodo de Inicio</label>
+                          <input type="text" name="pinicio" class="form-control" value="{{ datos_expedientes.periodo_inicio  }}" >
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                          <label for="ciudad" class="form-label">Periodo de Finalizacion</label>
+                          <input type="text" name="ciudad" class="form-control" value="{{ datos_expedientes.periodo_inicio }}" >
+                        </div> 
+                        <div class="col-md-3 col-sm-6">
+                          <label for="pfinal" class="form-label">Estado</label>
+                          <input type="text" name="pfinal" class="form-control"  value="{{ datos_expedientes.estado }}" >
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                          <label for="acredit" class="form-label">Acreditacion</label>
+                          {% if datos_expedientes.acreditacion %}
+                            <input type="text" name="acredit" class="form-control"  value="Si" >
+                          {% else %}
+                            <input type="text" name="acredit" class="form-control"  value="No" >
+                          {% endif %}
+                          </select>
+                        </div>                   
+                      </div>
+                      <div class="row mt-4">
+                          <h5>Adjuntar los archivos en formato: .jpg, .png y/o .pdf</h5>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-4 col-sm-6">
+                          <label for="fcedula" class="form-label me-5">Documento de Identidad </label>
+                          <button class="btn btn-secondary m" > 
+                            <a href="{{ datos_expedientes.doc_identidad.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                          <button class="btn btn-danger m" > 
+                            <a href="{{ datos_expedientes.doc_identidad.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                          <label for="ftipocarnet" class="form-label me-5">Foto Tipo Carnet </label>
+                          <button class="btn btn-secondary flex-column" >
+                            <a href="{{ datos_expedientes.foto_perfil.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                          <label for="fconstnotas" class="form-label me-5">Constancia de Notas </label>
+                          <button class="btn btn-secondary m" >
+                            <a href="{{ datos_expedientes.const_notas.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>            
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-md-4 col-sm-6">
+                          <label for="fincrpcion" class="form-label me-5">Inscripcion de Pasantia</label>
+                          <button class="btn btn-secondary m" > 
+                            <a href="{{ datos_expedientes.const_inscripcion.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                          <label for="fasistaller" class="form-label me-5">Asistencia al Taller</label>
+                          <button class="btn btn-secondary flex-column" >
+                            <a href="{{ datos_expedientes.asistencia.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                          <label for="fforma1" class="form-label me-5">Planilla de Forma 1</label>
+                          <button class="btn btn-secondary m" >
+                            <a href="{{ datos_expedientes.forma_1.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+              <div class="tab-pane fade" id="seguridad" role="tabpanel" aria-labelledby="seguridad-tab">
+                <div class="bg-light rounded-bottom mb-2">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col card">
+                    <div class="container p-5">
+                 <form class="m-2 needs-validation" method="post" action="/procesos/" enctype="multipart/form-data" novalidate>
+                  <div>
+                    <p class="fs-4">Debe agregar todos los recaudos para completar el proceso, para ello debe tener todos los documentos en formato digital, una ves sean cargados solo pueden ser modificados por el Coordinador.</p>
+                  </div>
+                  {% csrf_token %}  
+                    <div class="row mt-2">
+                      {% for proceso_activo in procesos_activos %}
+                      <div class="col-md-4 col-sm-6 mt-3">
+                        <label for="dato" class="form-label me-5"> {{ proceso_activo.id_tproceso.nombre }}  </label>
+                        {% if proceso_activo.estado == 'Pendiente' %}
+                          <input type="file" name="{{ proceso_activo.id_proceso }}" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                        {% else %}
+                          <button class="btn btn-secondary me-5" >
+                            <a href="{{ proceso_activo.anexo.url }}" target="_blank" class="bi bi-eye link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Vizualizar </a>
+                          </button>
+                        {% endif %}
+                      </div>
+                      {% endfor %}
+                    </div>
+                    <div class="row align-items-center mt-3">
+                      <div class="col text-center mb-3">
+                        <button type="submit" class="btn btn-success ">Enviar</button>
+                      </div>
+                    </div>
+                  </form>
+                    </div>  
+                  </div>  
+                </div>
+              </div>
+            </div>
+        </div>  
+      </div>
+    </div>
+    {% else %}
+    <div class="row align-items-center justify-content-center">
+      <div class="col-11 card bg-light m-4 p-5">
+        <div class="container">
+          <div class="row d-flex flex-column align-items-center justify-content-center mt-4 mb-4">
+            <div class="col-6">
+            <h2>¡Bienvenid@ {{ datos.nombre }} {{ datos.apellido }}!</h2>
+            <p class="fs-5">Para comenzar a participar en el programa de pasantías, es necesario que crees tu expediente.</p>
+            <button type="button" class="btn btn-outline-success mt-3" data-bs-toggle="modal" data-bs-target="#crearexpediente">
+            <i class="bi bi-folder-plus fs-1"></i> </i> Crear Expediente
+            </button>
+            </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    </div>
+  </div>
+ 
+  <!-- Modal Crear Expediente-->
+  <div class="modal" id="crearexpediente" data-bs-backdrop="static" data-bs-key="false" tabindex="-1" aria-labelledby="crearexpediente" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear expediente</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>  
+          <div class="modal-body">
+              <form class="m-2 needs-validation" method="post" action="/participante/" enctype="multipart/form-data" novalidate>      
+                {% csrf_token %}        
+                <div class="row">
+                  <h4>Datos del usuario</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                      <label for="cedula" class="form-label">Doc. Identidad</label>
+                      <input type="text" name="cedula" class="form-control" value="{{ datos.cedule }} "  required>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label for="carrera" class="form-label">Carrera</label>
+                        <select id="carrera" name="carrera" class="form-control" required>
+                          <option value="" selected disabled>Seleccione una Carrera</option>
+                          {% for carrera in carreras %}
+                            <option value="{{ carrera.id_carrera }}">{{ carrera.nombre }}</option>
+                          {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                            Seleccione una Carrera
+                        </div> 
+                    </div>
+                    <div class="col-md-3 col-sm-6 ">
+                        <label for="mencion" class="form-label">Mencion</label>
+                        <select id="mencion" name="mencion" id="mencion" class="form-control" required>
+                          <option value="" selected disabled>Seleccione una Mención</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Seleccione una Mención
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="nombreT" class="form-label">Tutor</label>
+                        <select id="tutor" name="tutor" class="form-control" required>
+                            <option value="">Seleccione al tutor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>   
+                <div class="row mt-4">
+                    <h4>Recaudos para expediente de pasantias</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-3 col-sm-6">
+                      <label for="pinicio" class="form-label">Periodo de Inicio</label>
+                      <input type="text" name="pinicio" class="form-control" id="pinicio" required>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                      <label for="pfinal" class="form-label">Periodo de Final</label>
+                      <input type="text" name="pfinal" class="form-control" id="pfinal" required>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                      <label for="acredit" class="form-label">Acreditacion</label>
+                      <select class="form-control" name="acredit" id="acredit" required>
+                        <option value="True">Si</option>
+                        <option value="False" selected>No</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <label for="ciudad" name="ciudad" class="form-label">Años de Experiencia</label>
+                        <input type="number" class="form-control" required>
+                    </div>                    
+                </div>
+                <div class="row mt-4">
+                      <h5>Adjuntar los archivos en formato: .jpg, .png y/o .pdf</h5>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6 col-sm-6">
+                      <label for="fcedula">Documento de Identidad</label>
+                      <input type="file" name="fcedula" id="fcedula" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                      <label for="ftipocarnet">Foto Tipo Carnet</label>
+                      <input type="file" name="ftipocarnet" id="ftipocarnet" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                      <label for="fconstnotas">Constancia de Notas</label>
+                      <input type="file" name="fconstnotas" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                      <label for="fincrpcion">Inscripcion de Pasantia</label>
+                      <input type="file" name="fincrpcion" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                   </div>
+                    <div class="col-md-6 col-sm-6">
+                      <label for="fasistaller">Asistencia al Taller</label>
+                      <input type="file" name="fasistaller" class="btn btn-outline-secondary form-control mt-2 mb-2" required>                      
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                      <label for="fforma1">Planilla de Forma 1</label>
+                      <input type="file" name="fforma1" class="btn btn-outline-secondary form-control mt-2 mb-2" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                </div> 
+              </form>  
+          </div>          
+        </div>
+      </div>
+  </div>  
+    
+
+
+ 
+
+  <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+      'use strict'
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation')
+
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+  
+
+      // Referencias a los elementos del DOM
+      const carreraSelect = document.getElementById('carrera');
+      const mencionSelect = document.getElementById('mencion');
+      const tutorSelect = document.getElementById('tutor');
+
+      // ==========================================================
+      // PASO 1: Cargar Menciones al cambiar la Carrera
+      // ==========================================================
+      carreraSelect.addEventListener('change', function() {
+          const carreraId = this.value;
+          
+          // Limpiar y deshabilitar SELECTs dependientes
+          mencionSelect.innerHTML = '<option value="">Cargando...</option>';
+          mencionSelect.disabled = true;
+          tutorSelect.innerHTML = '<option value="">-- Primero seleccione Mención --</option>';
+          tutorSelect.disabled = true;
+
+          if (carreraId) {
+              // URL a la vista de Django
+              const url = "{% url 'ajax_cargar_menciones' %}?carrera_id=" + carreraId;
+              
+              fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                      mencionSelect.innerHTML = '<option value="">-- Seleccione una Mención --</option>';
+                      if (data.length > 0) {
+                          data.forEach(mencion => {
+                              mencionSelect.innerHTML += `<option value="${mencion.id}">${mencion.nombre}</option>`;
+                          });
+                          mencionSelect.disabled = false;
+                      } else {
+                          mencionSelect.innerHTML = '<option value="">No hay Menciones para esta Carrera</option>';
+                      }
+                  })
+                  .catch(error => console.error('Error al cargar menciones:', error));
+          } else {
+              mencionSelect.innerHTML = '<option value="">-- Primero seleccione Carrera --</option>';
+          }
+      });
+
+      // ==========================================================
+      // PASO 2: Cargar Tutores al cambiar la Mención
+      // ==========================================================
+      mencionSelect.addEventListener('change', function() {
+          const mencionId = this.value;
+
+          // Limpiar y deshabilitar SELECT dependiente
+          tutorSelect.innerHTML = '<option value="">Cargando...</option>';
+          tutorSelect.disabled = true;
+
+          if (mencionId) {
+              const url = "{% url 'ajax_cargar_tutores' %}?mencion_id=" + mencionId;
+
+              fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                      tutorSelect.innerHTML = '<option value="">-- Seleccione un Tutor --</option>';
+                      if (data.length > 0) {
+                          data.forEach(tutor => {
+                              // Usamos el nombre_completo generado en la vista de Django
+                              tutorSelect.innerHTML += `<option value="${tutor.id}">${tutor.nombre_completo}</option>`;
+                          });
+                          tutorSelect.disabled = false;
+                      } else {
+                          tutorSelect.innerHTML = '<option value="">No hay Tutores para esta Mención</option>';
+                      }
+                  })
+                  .catch(error => console.error('Error al cargar tutores:', error));
+          } else {
+              tutorSelect.innerHTML = '<option value="">-- Primero seleccione Mención --</option>';
+          }
+      });
+  </script>
+
+</body>
+
+{% endblock %}
