@@ -100,7 +100,6 @@
                         <label for="tusuario" class="form-label">Tipo de Usuario</label>
                         <select id="tusuario" name="tusuario" class="form-control border border-secondary" required>
                           <option value="">Seleccione un rol</option>
-                          <option value="1">Administrador</option>
                           {% for tipo in tusuarios %}
                           <option value="{{ tipo.id_tipo }}">{{ tipo.nombre }}</option>
                           {% endfor %}

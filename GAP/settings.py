@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 import dj_database_url
 
@@ -26,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -83,20 +84,21 @@ WSGI_APPLICATION = 'GAP.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
-        conn_max_age=600
-    )
+    #'default': dj_database_url.config(
+    #    default='postgresql://postgres:postgres@localhost:5432/mysite',
+    #    conn_max_age=600
+    #)
+    'default': {
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD':config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', cast=int),
+    }
 }
     
-    #"default": {
-    #    "ENGINE": "django.db.backends.postgresql",
-    #    "NAME": "gap_bd",
-    #    "USER": "postgres",
-    #    "PASSWORD": "admin",
-    #    "HOST": "127.0.0.1",
-    #    "PORT": "5432",
-    #}
+    
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

@@ -58,7 +58,7 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 
 # Registro de usuarios
-
+@login_required
 def registro(request):
 
     if request.method == 'GET':
