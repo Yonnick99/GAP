@@ -13,12 +13,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
+
         <div class="container bg-light rounded mb-2">
-          <form class="from needs-validation" method="post" action="/actualizar/" novalidate>
+          {% if persona_id %}
+            <form class="from needs-validation" method="post" action="/modificar/{{persona_id}}/" novalidate>
+          {% else %}
+            <form class="from needs-validation" method="post" action="/actualizar/" novalidate>
+          {% endif %}
             {% csrf_token %}
             <div class="row">
               <div class="col-12 mt-2">
                 <div class="row text-center m-2">
+
                   <div class="col-1 align-items-left text-center m-2">
                     <i>
                       {% if tipos == 1 %}

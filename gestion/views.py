@@ -139,13 +139,63 @@ def modificar_usuario(request,persona_id):
     usuario = Usuario.objects.get(usuario=request.user.username)
     tipo = Persona.objects.filter(id_usuario=usuario.id_usuario).values_list('tipo_usuario', flat=True).first()
 
-
-    try:
-        data = get_object_or_404(Persona, id_persona=persona_id)
-    except Persona.DoesNotExist:
-        return redirect('seguridad_admin')
+    if request.method == 'GET':
+        try:
+            data = get_object_or_404(Persona, id_persona=persona_id)
+        except Persona.DoesNotExist:
+            return redirect('seguridad_admin')
     
-    return render(request, 'seguridad.html', {'datos': data, 'tipos': tipo})
+        return render(request, 'seguridad.html', {'datos': data, 'tipos': tipo, 'persona_id':persona_id })
+
+    elif request.method == 'POST':
+        try:
+            datosPersona = Persona.objects.get(id_persona = persona_id)
+            modificarPersona = Persona(
+                id_persona= datosPersona.id_persona,
+                id_usuario= datosPersona.id_usuario,
+                cedule= datosPersona.cedule,
+                nombre= request.POST.get('nombre'),
+                apellido= request.POST.get('apellido'),
+                fecha_nacimiento= request.POST.get('fNacimiento'),
+                tipo_usuario= datosPersona.tipo_usuario,
+                correo= request.POST.get('correo'),
+                tlf_princimal= request.POST.get('tprincipal'),
+                tlf_secundario= request.POST.get('tsecundario'),
+                estado= request.POST.get('estado'),
+                ciudad= request.POST.get('capital'),
+                cpostal= request.POST.get('cpostal'),
+                nucleo= request.POST.get('nucleo'),
+                fecha_creacion= datosPersona.fecha_creacion,
+            )
+                 
+            modificarPersona.save()
+
+            userName=str(Persona.objects.get(id_persona=persona_id).id_usuario)
+            
+            modificarUser = User.objects.get(username = userName)
+            modificarUser.first_name = Persona.objects.get(id_persona=persona_id).nombre
+            modificarUser.last_name = Persona.objects.get(id_persona=persona_id).apellido
+            modificarUser.email = Persona.objects.get(id_persona=persona_id).correo
+            modificarUser.save()
+
+            if tipo == 1:
+                return redirect('seguridad_admin') 
+            elif tipo == 3:
+                return redirect('seguridad_admin')      
+            elif tipo == 2:
+                return HttpResponse("Página de Tutor - En construcción")
+            elif tipo == 4:
+                return redirect('participante')
+            else:                
+                return HttpResponse("Tipo de usuario no reconocido", status=400)
+
+        except IntegrityError as e:
+            return HttpResponse(f"Error al crear la persona: {e}")
+        except Tusuario.DoesNotExist:
+           return  HttpResponse(f"Tipo de usuario no encontrado")
+
+        
+
 
 @login_required
 def actualizar(request):
